@@ -26,10 +26,16 @@ module ItemHttp =
 
       PUT >=> routef "/items/%s" (fun id ->
         fun next context ->
-          text ("Update " + id) next context)
+          task {
+            let save = context.GetService<ItemSave>()
+            let! item = context.BindJsonAsync<Item>()
+            let item = {item with Id = id}
+            return! json (save item) next context
+          })
 
       DELETE >=> routef "/items/%s" (fun id ->
         fun next context ->
-          text ("Delete " + id) next context)
+          let delete = context.GetService<ItemDelete>()
+          json (delete id) next context)
     ]
 

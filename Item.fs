@@ -13,3 +13,5 @@ type ItemCriteria =
   | All
 
 type ItemFind = ItemCriteria -> Item[]
+
+type ItemDelete = string -> bool
